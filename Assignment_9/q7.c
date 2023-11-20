@@ -28,17 +28,20 @@ int search(int inorder[],int start,int end,int val)
     return -1;
 }
 
-struct node * create_tree(int inorder[],int postorder[],int start,int end,int * postorderIndex)
+struct Node * create_tree(int inorder[],int postorder[],int start,int end,int * postorderIndex)
 {
-    if( start < end)
+//	printf("%d %d /n",start,end);
+    if( start > end)
     {
         return NULL;
     }
-    struct Node * cn=createNode(postorder[postorderIndex]);
-    *preorderIndex--;
+    struct Node * cn=createNode(postorder[*postorderIndex]);
 
-    rootindex=search(inorder,start,end);
-    cn->right=create_tree(inorder,postorder,rootindex,end,postorderIndex);
+
+    int rootindex=search(inorder,start,end,postorder[*postorderIndex]);
+
+    *postorderIndex = *postorderIndex - 1;
+    cn->right=create_tree(inorder,postorder,rootindex+1,end,postorderIndex);
     cn->left=create_tree(inorder,postorder,start,rootindex-1,postorderIndex);
     return cn;
 }
@@ -71,5 +74,6 @@ int main()
     int postorderIndex = n-1;
 
     struct Node * root=create_tree(inorder,postorder,0,n-1,&postorderIndex);
+
     dft(root);
 }
